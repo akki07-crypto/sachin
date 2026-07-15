@@ -2,7 +2,7 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 
-let port = 3030;
+let port = process.env.PORT ? parseInt(process.env.PORT, 10) : 3030;
 const PUBLIC_DIR = __dirname;
 const DATABASE_FILE = path.join(__dirname, 'contacts.json');
 
