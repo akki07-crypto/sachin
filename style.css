@@ -134,18 +134,19 @@ h1, h2, h3, h4, h5, h6 {
 /* Glassmorphism Cards */
 .glass-panel {
   background: var(--bg-card);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--color-border);
-  border-radius: 16px;
-  padding: 24px;
+  border-radius: 12px;
+  padding: 28px;
   transition: var(--transition);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5), inset 0 0 12px rgba(255, 255, 255, 0.02);
 }
 
 .glass-panel:hover {
   border-color: var(--color-border-hover);
   background: var(--bg-card-hover);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(189, 0, 255, 0.05);
+  box-shadow: 0 16px 50px rgba(189, 0, 255, 0.1), inset 0 0 20px rgba(189, 0, 255, 0.08);
 }
 
 /* Buttons */
@@ -160,13 +161,35 @@ h1, h2, h3, h4, h5, h6 {
   text-transform: uppercase;
   letter-spacing: 1px;
   padding: 14px 28px;
-  border-radius: 8px;
-  border: none;
   cursor: pointer;
   transition: var(--transition);
   text-decoration: none;
   position: relative;
   overflow: hidden;
+  clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+  border: none;
+}
+
+/* Button Scanline Sweep */
+.btn::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent);
+  transform: skewX(-25deg);
+  transition: none;
+}
+
+.btn:hover::after {
+  animation: button-sweep-anim 1.2s infinite ease-in-out;
+}
+
+@keyframes button-sweep-anim {
+  0% { left: -100%; }
+  100% { left: 150%; }
 }
 
 .btn-primary {
@@ -177,19 +200,19 @@ h1, h2, h3, h4, h5, h6 {
 
 .btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 0 20px rgba(189, 0, 255, 0.7), 0 0 30px rgba(189, 0, 255, 0.3);
+  box-shadow: 0 0 25px rgba(189, 0, 255, 0.8), 0 0 35px rgba(189, 0, 255, 0.4);
 }
 
 .btn-secondary {
-  background: transparent;
+  background: rgba(0, 240, 255, 0.05);
   color: var(--color-secondary);
   border: 1px solid var(--color-secondary);
-  box-shadow: inset 0 0 10px rgba(0, 240, 255, 0.05);
+  box-shadow: inset 0 0 12px rgba(0, 240, 255, 0.08);
 }
 
 .btn-secondary:hover {
-  background: rgba(0, 240, 255, 0.1);
-  box-shadow: var(--glow-secondary);
+  background: rgba(0, 240, 255, 0.15);
+  box-shadow: var(--glow-secondary), inset 0 0 20px rgba(0, 240, 255, 0.1);
   transform: translateY(-2px);
 }
 
