@@ -978,6 +978,52 @@ h6 {
     background: var(--primary-gradient);
 }
 
+/* Cloud Network Mockup */
+.cloud-network-mock {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    max-width: 320px;
+    padding: 30px;
+    background: rgba(255, 255, 255, 0.02);
+}
+.cloud-node {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--border-card);
+    padding: 12px 24px;
+    border-radius: 12px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    justify-content: center;
+    color: var(--text-secondary);
+    transition: var(--transition-smooth);
+}
+.cloud-node i {
+    font-size: 1.2rem;
+}
+.cloud-node.active {
+    background: var(--primary-gradient);
+    color: #070913;
+    border-color: transparent;
+    box-shadow: 0 0 20px rgba(0, 242, 254, 0.2);
+}
+.cloud-arrow {
+    color: var(--text-muted);
+    font-size: 1.1rem;
+    animation: bounce-arrow 1.5s infinite;
+}
+
+@keyframes bounce-arrow {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+}
+
 /* Academic Projects Categories styling */
 .academic-project-categories {
     display: grid;
