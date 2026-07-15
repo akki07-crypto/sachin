@@ -16,6 +16,7 @@
             --border-card: rgba(255, 255, 255, 0.06);
             --primary-gradient: linear-gradient(135deg, #00F2FE 0%, #4FACFE 100%);
             --primary-color: #00F2FE;
+            --secondary-color: #F35588;
             --text-primary: #FFFFFF;
             --text-secondary: #B0B5C6;
         }
@@ -189,6 +190,9 @@
             </div>
             <div>
                 <button onclick="fetchQueries()" class="btn"><i class="fa-solid fa-arrows-rotate"></i> Refresh</button>
+                <button onclick="logout()" class="btn" style="background: var(--secondary-color); color: white; margin-left: 10px;">
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i> Log Out
+                </button>
                 <a href="index.html" class="btn" style="background: transparent; color: white; border: 1px solid var(--border-card); margin-left: 10px;">
                     <i class="fa-solid fa-arrow-left"></i> Main Site
                 </a>
@@ -234,14 +238,30 @@
         </div>
     </div>
 
-    <script>
+        // Guard Page Access
+        const token = localStorage.getItem('adminToken');
+        if (!token) {
+            window.location.href = 'login.html';
+        }
+
         async function fetchQueries() {
             const tableBody = document.getElementById('queries-body');
             const totalCount = document.getElementById('total-queries-count');
             const todayCount = document.getElementById('today-queries-count');
             
             try {
-                const response = await fetch('/api/contacts');
+                const response = await fetch('/api/contacts', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                
+                if (response.status === 401) {
+                    localStorage.removeItem('adminToken');
+                    window.location.href = 'login.html';
+                    return;
+                }
+                
                 if (!response.ok) throw new Error('Failed to fetch data');
                 
                 const queries = await response.json();
@@ -297,6 +317,12 @@
             }
         }
 
+        function logout() {
+            localStorage.removeItem('adminToken');
+            localStorage.removeItem('adminUser');
+            window.location.href = 'login.html';
+        }
+
         function escapeHTML(str) {
             if (!str) return '';
             return str.replace(/[&<>'"]/g, 
@@ -311,7 +337,9 @@
         }
 
         // Fetch on load
-        fetchQueries();
+        if (token) {
+            fetchQueries();
+        }
     </script>
 </body>
 </html>

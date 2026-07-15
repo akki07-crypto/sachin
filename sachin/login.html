@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tech. Point | Admin Login</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-dark: #070913;
+            --bg-card: rgba(255, 255, 255, 0.03);
+            --border-card: rgba(255, 255, 255, 0.06);
+            --primary-gradient: linear-gradient(135deg, #00F2FE 0%, #4FACFE 100%);
+            --primary-color: #00F2FE;
+            --secondary-color: #F35588;
+            --text-primary: #FFFFFF;
+            --text-secondary: #B0B5C6;
+            --text-muted: #646E8A;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background-image: 
+                radial-gradient(circle at 20% 30%, rgba(0, 242, 254, 0.07) 0%, transparent 40%),
+                radial-gradient(circle at 80% 70%, rgba(243, 85, 136, 0.07) 0%, transparent 40%);
+        }
+        
+        .login-container {
+            width: 100%;
+            max-width: 440px;
+            perspective: 1000px;
+        }
+        
+        .logo {
+            text-align: center;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800;
+            font-size: 2rem;
+            color: var(--text-primary);
+            text-decoration: none;
+            letter-spacing: 1px;
+            margin-bottom: 30px;
+            display: block;
+        }
+        
+        .logo-accent {
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .glass-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-card);
+            border-radius: 20px;
+            padding: 40px;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
+            transition: border-color 0.4s;
+        }
+        
+        .glass-card:focus-within {
+            border-color: rgba(0, 242, 254, 0.25);
+        }
+        
+        h2 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.6rem;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 24px;
+        }
+        
+        .form-group label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            font-family: 'Outfit', sans-serif;
+            letter-spacing: 0.5px;
+        }
+        
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        
+        .input-wrapper i {
+            position: absolute;
+            left: 18px;
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            transition: color 0.2s;
+        }
+        
+        .input-wrapper input {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-card);
+            color: var(--text-primary);
+            padding: 14px 20px 14px 48px;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            outline: none;
+            transition: all 0.2s;
+        }
+        
+        .input-wrapper input:focus {
+            border-color: var(--primary-color);
+            background: rgba(255, 255, 255, 0.04);
+            box-shadow: 0 0 15px rgba(0, 242, 254, 0.1);
+        }
+        
+        .input-wrapper input:focus + i {
+            color: var(--primary-color);
+        }
+        
+        .btn {
+            width: 100%;
+            background: var(--primary-gradient);
+            color: #070913;
+            padding: 14px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-family: 'Outfit', sans-serif;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-size: 1rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 8px 20px rgba(0, 242, 254, 0.15);
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 25px rgba(0, 242, 254, 0.3);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        .btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+        
+        .alert-error {
+            background: rgba(243, 85, 136, 0.1);
+            border: 1px solid rgba(243, 85, 136, 0.2);
+            color: #ff8b94;
+            padding: 12px 16px;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            margin-bottom: 24px;
+            display: none;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 24px;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        
+        .back-link:hover {
+            color: var(--primary-color);
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <a href="index.html" class="logo">
+            <span class="logo-accent">TECH.</span>POINT
+        </a>
+        <div class="glass-card">
+            <h2>Admin Login</h2>
+            <p class="subtitle">Access database dashboard portals.</p>
+            
+            <div class="alert-error" id="error-alert">
+                <i class="fa-solid fa-circle-exclamation"></i>
+                <span id="error-message">Invalid credentials entered</span>
+            </div>
+            
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <div class="input-wrapper">
+                        <i class="fa-regular fa-user"></i>
+                        <input type="text" id="username" placeholder="Enter admin username" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-lock"></i>
+                        <input type="password" id="password" placeholder="Enter admin password" required>
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn" id="submit-btn">
+                    Log In <i class="fa-solid fa-arrow-right-to-bracket"></i>
+                </button>
+            </form>
+            
+            <a href="index.html" class="back-link"><i class="fa-solid fa-arrow-left"></i> Back to Main Site</a>
+        </div>
+    </div>
+
+    <script>
+        // Redirect if already logged in
+        if (localStorage.getItem('adminToken')) {
+            window.location.href = 'admin.html';
+        }
+
+        const loginForm = document.getElementById('login-form');
+        const submitBtn = document.getElementById('submit-btn');
+        const errorAlert = document.getElementById('error-alert');
+        const errorMessage = document.getElementById('error-message');
+
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const usernameVal = document.getElementById('username').value;
+            const passwordVal = document.getElementById('password').value;
+
+            // Clear errors
+            errorAlert.style.display = 'none';
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = 'Verifying... <i class="fa-solid fa-spinner fa-spin-pulse"></i>';
+
+            try {
+                const response = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        username: usernameVal,
+                        password: passwordVal
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (!response.ok) {
+                    throw new Error(data.error || 'Authentication failed');
+                }
+
+                // Login Success!
+                // Store token in localStorage
+                localStorage.setItem('adminToken', data.token);
+                localStorage.setItem('adminUser', data.username);
+                
+                // Redirect to dashboard
+                window.location.href = 'admin.html';
+
+            } catch (err) {
+                console.error(err);
+                errorMessage.textContent = err.message;
+                errorAlert.style.display = 'flex';
+                
+                // Reset button
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = 'Log In <i class="fa-solid fa-arrow-right-to-bracket"></i>';
+            }
+        });
+    </script>
+</body>
+</html>

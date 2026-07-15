@@ -6,6 +6,18 @@ let port = process.env.PORT ? parseInt(process.env.PORT, 10) : 3030;
 const PUBLIC_DIR = __dirname;
 const DATABASE_FILE = path.join(__dirname, 'contacts.json');
 
+// Admin Authentication Setup
+const ADMIN_USER = 'admin';
+const ADMIN_PASS = 'techpoint@admin';
+const AUTH_TOKEN = 'token_' + Buffer.from(ADMIN_USER + ':' + ADMIN_PASS).toString('base64');
+
+function isAuthorized(req) {
+    const authHeader = req.headers['authorization'];
+    if (!authHeader) return false;
+    const token = authHeader.split(' ')[1];
+    return token === AUTH_TOKEN;
+}
+
 // MIME types mapper
 const MIME_TYPES = {
     '.html': 'text/html',
@@ -30,7 +42,7 @@ const server = http.createServer((req, res) => {
     // Enable CORS for testing
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 
     if (req.method === 'OPTIONS') {
         res.writeHead(204);
@@ -94,8 +106,38 @@ const server = http.createServer((req, res) => {
         return;
     }
 
-    // 2. API: GET /api/contacts (Fetch all contact queries for Admin Dashboard)
+    // 2. API: POST /api/login (Admin Credentials Check)
+    if (req.method === 'POST' && req.url === '/api/login') {
+        let body = '';
+        req.on('data', chunk => {
+            body += chunk.toString();
+        });
+        req.on('end', () => {
+            try {
+                const creds = JSON.parse(body);
+                if (creds.username === ADMIN_USER && creds.password === ADMIN_PASS) {
+                    res.writeHead(200, { 'Content-Type': 'application/json' });
+                    res.end(JSON.stringify({ token: AUTH_TOKEN, username: ADMIN_USER }));
+                } else {
+                    res.writeHead(401, { 'Content-Type': 'application/json' });
+                    res.end(JSON.stringify({ error: 'Invalid username or password' }));
+                }
+            } catch (e) {
+                res.writeHead(400, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ error: 'Invalid payload request' }));
+            }
+        });
+        return;
+    }
+
+    // 3. API: GET /api/contacts (Fetch all contact queries for Admin Dashboard - Guarded)
     if (req.method === 'GET' && req.url === '/api/contacts') {
+        if (!isAuthorized(req)) {
+            res.writeHead(401, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ error: 'Unauthorized. Please login first.' }));
+            return;
+        }
+        
         fs.readFile(DATABASE_FILE, 'utf8', (err, data) => {
             if (err) {
                 res.writeHead(500, { 'Content-Type': 'application/json' });
